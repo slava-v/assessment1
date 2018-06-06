@@ -1,0 +1,19 @@
+version: '2'
+
+volumes:
+    logs:
+        driver: local
+
+services:
+    slim:
+        image: php:7.2-alpine
+        working_dir: /var/www
+        command: php -S 0.0.0.0:8080 -t public
+        environment:
+            docker: "true"
+        ports:
+            - 8080:8080
+            - 9000
+        volumes:
+            - .:/var/www
+            - logs:/var/www/logs
