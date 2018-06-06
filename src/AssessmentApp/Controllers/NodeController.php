@@ -32,16 +32,18 @@ class NodeController {
     public function getNode(Request $request, Response $response, array $args){
         // Sample log message
         //$this->container->logger->info("Slim-Skeleton '/' route");
-        var_dump($args);
+        $this->container->logger->info("Slim-Skeleton '/node/' route");
 
-        // Render index view
-        //return $this->container->renderer->render($response, 'index.phtml', $args);
     }
 
     public function getNodeWithMetadata(Request $request, Response $response, array $args){
+        $this->container->logger->info("Slim-Skeleton '/node/-meta' route");
         list($nodeId, $metaName) = $args;
 
+
         $node = $this->nodeService->getNode($nodeId);
+
+        var_dump($node);
 
         return $node->getMetadata($metaName);
 

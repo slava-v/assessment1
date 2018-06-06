@@ -20,4 +20,27 @@ interface INodeService
      * @return Node
      */
     function getNode($nodeId);
+
+
+    /**
+     * Add new node based on $nodeData passed
+     * @param $nodeData - JSON representation of a node
+     */
+    function addNode($nodeData);
+
+
+    /**
+     * Update a node
+     * @param $nodeId - Id of a node
+     * @param $nodeData - JSON representation of a node
+     */
+    function updateNode($nodeId, $nodeData);
+
+
+    /**
+     * Delete a node by id
+     *
+     * @param $nodeId - Id of a node
+     */
+    function deleteNode($nodeId);
 }

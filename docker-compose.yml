@@ -11,9 +11,13 @@ services:
         command: php -S 0.0.0.0:8080 -t public
         environment:
             docker: "true"
+            PHP_XDEBUG_REMOTE_HOST: "172.18.0.1"
+            PHP_XDEBUG_REMOTE_PORT: "9001"
+            PHP_XDEBUG_IDEKEY: PHPSTORM
         ports:
             - 8080:8080
             - 9000
         volumes:
             - .:/var/www
             - logs:/var/www/logs
+            - docker-scripts:/var/docker_scripts

@@ -2,14 +2,14 @@
 /**
  * Created by PhpStorm.
  * User: slava
- * Date: 6/5/18
- * Time: 10:51 PM
+ * Date: 6/6/18
+ * Time: 9:40 PM
  */
 
 namespace AssessmentApp\Entities;
 
 
-class AddressMetadata
+class AddressMetadataDto
 {
     /** @var string */
     public $streetName;

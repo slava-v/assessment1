@@ -19,6 +19,15 @@ $container['logger'] = function ($c) {
 };
 
 $container['NodeController'] = function ($c){
-    $nodeService = new \AssessmentApp\Services\NodeService();
+
+    // @todo: Add database connection
+    // $settings = $c->get('settings')['database'];
+
+    // @todo: Benchmark performance. Not sure about mapping performance
+    $autoMapper = new \AutoMapperPlus\AutoMapper(new \AssessmentApp\Automappers\NodeAutomapper());
+
+
+    $nodeRepository = new \AssessmentApp\Repositories\NodeRepository();
+    $nodeService = new \AssessmentApp\Services\NodeService($nodeRepository, $autoMapper);
     return new \AssessmentApp\Controllers\NodeController($c, $nodeService);
 };
