@@ -2,18 +2,21 @@
 /**
  * Created by PhpStorm.
  * User: slava
- * Date: 6/6/18
- * Time: 9:41 PM
+ * Date: 6/7/18
+ * Time: 8:06 PM
  */
 
 namespace AssessmentApp\Entities;
 
 
-class PersonMetadataDto
+class ApiError
 {
     /** @var string */
-    public $firstName;
+    public $code;
 
     /** @var string */
-    public $lastName;
+    public $message;
+
+    /** @var string */
+    public $helpUrl;
 }

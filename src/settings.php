@@ -22,6 +22,7 @@ return [
             'database_name' => '',
             'username' => '',
             'password' => ''
-        ]
+        ],
+        'storageFolderPath' => dirname(dirname(__FILE__)) .'/node-data/'
     ],
 ];

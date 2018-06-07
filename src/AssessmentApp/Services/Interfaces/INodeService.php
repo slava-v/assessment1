@@ -23,18 +23,10 @@ interface INodeService
 
 
     /**
-     * Add new node based on $nodeData passed
+     * Add or update new node based on $nodeData passed
      * @param $nodeData - JSON representation of a node
      */
-    function addNode($nodeData);
-
-
-    /**
-     * Update a node
-     * @param $nodeId - Id of a node
-     * @param $nodeData - JSON representation of a node
-     */
-    function updateNode($nodeId, $nodeData);
+    function addOrUpdate(Node $nodeData);
 
 
     /**

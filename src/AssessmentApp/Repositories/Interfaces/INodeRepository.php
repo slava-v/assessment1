@@ -22,11 +22,18 @@ interface INodeRepository
     function getById($nodeId);
 
     /**
-     * Adds a new Node or updates existing one
+     * Adds a new Node
      * @param Node $node
      * @return boolean
      */
-    function addOrUpdate(Node $node);
+    function add(Node $node);
+
+    /**
+     * Updates existing node
+     * @param Node $node
+     * @return boolean
+     */
+    function update(Node $node);
 
     /**
      * Delete a node
@@ -34,5 +41,5 @@ interface INodeRepository
      * @param $nodeId
      * @return boolean
      */
-    function deleteNode($nodeId);
+    function delete($nodeId);
 }

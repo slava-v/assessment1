@@ -11,14 +11,33 @@ namespace AssessmentApp\Repositories;
 
 use AssessmentApp\Entities\Node;
 use AssessmentApp\Repositories\Interfaces\INodeRepository;
+use AssessmentApp\Repositories\Interfaces\IStorage;
 
 class NodeRepository implements INodeRepository
 {
+    /**
+     * @var IStorage
+     */
+    private $storage;
+
+    public function __construct(IStorage $storage)
+    {
+        $this->storage = $storage;
+    }
 
     /**
      * @inheritdoc
      */
-    public function addOrUpdate(Node $node)
+    public function add(Node $node)
+    {
+        $this->storage->save($node);
+        return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function update(Node $node)
     {
         // @todo: Method "stub" add method body
         return true;
@@ -30,15 +49,17 @@ class NodeRepository implements INodeRepository
     public function getById($nodeId)
     {
         // @todo: Method "stub" add method body
-        return new Node();
+        return $this->storage->load($nodeId);
     }
 
     /**
      * @inheritdoc
      */
-    public function deleteNode($nodeId)
+    public function delete($nodeId)
     {
         // @todo: Method "stub" add method body
         return true;
     }
+
+
 }

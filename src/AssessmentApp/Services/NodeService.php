@@ -36,26 +36,37 @@ class NodeService implements INodeService
      */
     public function getNode($nodeId)
     {
-        return $this->repository->getById($nodeId);
+        if (empty($nodeId) || strlen($nodeId) != 13){
+            throw new \InvalidArgumentException('$nodeId cannot be empty or have a invalid length');
+        }
+
+        $node = $this->repository->getById($nodeId);
+
+        return  $this->autoMapper->map($node, Node::class);
     }
 
     /**
      * @inheritdoc
      */
-    public function addNode($nodeData)
+    public function addOrUpdate(Node $nodeData)
     {
-        // Validate JSON
-        // Build Node entity and persist
-    }
+        if (($nodeId = $nodeData->getId())!== ''){
 
-    /**
-     * @inheritdoc
-     */
-    public function updateNode($nodeId, $nodeData)
-    {
-        // Validate nodeId and nodeData JSON
-    }
+            $mappedNode = null;
 
+            if ( ($node = $this->repository->getById($nodeId)) !== null) {
+                $mappedNode = $this->autoMapper->map($node, Node::class);
+            }
+
+            if ($mappedNode instanceof Node){
+                $this->repository->update($nodeData);
+            } else {
+                $this->repository->add($nodeData);
+            }
+        }
+
+
+    }
 
     /**
      * @inheritdoc

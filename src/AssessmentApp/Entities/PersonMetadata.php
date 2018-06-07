@@ -8,11 +8,18 @@
 
 namespace AssessmentApp\Entities;
 
-class PersonMetadata
+class PersonMetadata extends NodeMetadata
 {
     /** @var string */
     public $firstName;
 
     /** @var string */
     public $lastName;
+
+    public function __construct(string $firstName = null, string $lastName = null)
+    {
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
+        $this->nodeType = NodeMetadataTypes::PERSON;
+    }
 }

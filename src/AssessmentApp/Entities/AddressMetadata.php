@@ -9,7 +9,7 @@
 namespace AssessmentApp\Entities;
 
 
-class AddressMetadata
+class AddressMetadata extends NodeMetadata
 {
     /** @var string */
     public $streetName;
@@ -25,4 +25,14 @@ class AddressMetadata
 
     /** @var string */
     public $country;
+
+    public function __construct($streetName = '', $houseNumber = '', $postalCode = '', $city = '', $country = '')
+    {
+        $this->streetName = $streetName;
+        $this->houseNumber = $houseNumber;
+        $this->postalCode = $postalCode;
+        $this->city = $city;
+        $this->country = $country;
+        $this->nodeType = NodeMetadataTypes::ADDRESS;
+    }
 }

@@ -8,7 +8,7 @@
 
 namespace AssessmentApp\Entities;
 
-final class Node
+final class Node implements \JsonSerializable
 {
     /** @var string guid */
     private $id;
@@ -19,10 +19,11 @@ final class Node
     /** @var Node[] */
     private $leafs;
 
-    public function __construct()
+    public function __construct($id = null, NodeMetadataCollection $metaData = null, $leafs = [])
     {
-        $this->id = uniqid();
-        $this->leafs = [];
+        $this->id = $id ?: uniqid();
+        $this->metaData = new NodeMetadataCollection();
+        $this->leafs = $leafs;
     }
 
     /**
@@ -39,7 +40,7 @@ final class Node
      */
     public function addLeaf(Node $node)
     {
-        $this->leafs[$node->id] = $node;
+        $this->leafs[] = $node->id;
 
         return $this;
     }
@@ -48,14 +49,14 @@ final class Node
      * @param PersonMetadata|AddressMetadata $metadata
      * @return Node $this
      */
-    public function setMetadata($metadata)
+    public function addMetadata($metadata)
     {
         if (($metadata instanceof PersonMetadata) === false
             && ($metadata instanceof AddressMetadata) === false) {
             throw new \InvalidArgumentException('Invalid metadata supplied');
         }
 
-        $this->metaData = $metadata;
+        $this->metaData[] = $metadata;
 
         return $this;
     }
@@ -94,4 +95,11 @@ final class Node
     }
 
 
+    /**
+     * @inheritdoc
+     */
+    public function jsonSerialize()
+    {
+        return get_object_vars($this);
+    }
 }

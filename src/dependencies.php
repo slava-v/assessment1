@@ -22,12 +22,13 @@ $container['NodeController'] = function ($c){
 
     // @todo: Add database connection
     // $settings = $c->get('settings')['database'];
+    $storageFolderPath = $c->get('settings')['storageFolderPath'];
 
     // @todo: Benchmark performance. Not sure about mapping performance
-    $autoMapper = new \AutoMapperPlus\AutoMapper(new \AssessmentApp\Automappers\NodeAutomapper());
+    $autoMapper = new \AutoMapperPlus\AutoMapper(new \AssessmentApp\Automappers\NodeAutoMapper());
 
-
-    $nodeRepository = new \AssessmentApp\Repositories\NodeRepository();
+    $storage = new \AssessmentApp\Repositories\FileStorage($storageFolderPath);
+    $nodeRepository = new \AssessmentApp\Repositories\NodeRepository($storage);
     $nodeService = new \AssessmentApp\Services\NodeService($nodeRepository, $autoMapper);
     return new \AssessmentApp\Controllers\NodeController($c, $nodeService);
 };

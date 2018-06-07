@@ -8,9 +8,14 @@
 
 namespace AssessmentApp\Controllers;
 
+use AssessmentApp\Entities\AddressMetadata;
+use AssessmentApp\Entities\ApiResponse;
+use AssessmentApp\Entities\Node;
 use AssessmentApp\Entities\NodeMetadataTypes;
+use AssessmentApp\Entities\PersonMetadata;
 use AssessmentApp\Services\Interfaces\INodeService;
 use Interop\Container\ContainerInterface;
+use Slim\Exception\NotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -30,28 +35,27 @@ class NodeController {
 
 
     public function getNode(Request $request, Response $response, array $args){
-        // Sample log message
-        //$this->container->logger->info("Slim-Skeleton '/' route");
-        $this->container->logger->info("Slim-Skeleton '/node/' route");
-
-    }
-
-    public function getNodeWithMetadata(Request $request, Response $response, array $args){
-        $this->container->logger->info("Slim-Skeleton '/node/-meta' route");
-        list($nodeId, $metaName) = $args;
-
+        $nodeId = $args['nodeId'];
 
         $node = $this->nodeService->getNode($nodeId);
 
-        var_dump($node);
-
-        return $node->getMetadata($metaName);
-
+        if ($node instanceof Node){
+            return $newResponse = $response->withJson(new ApiResponse($node));
+        } else {
+            return new NotFoundException($request, $response);
+        }
     }
 
     public function postNode($request, $response, $args)
     {
-        return $this->container->renderer->render($response, 'index.phtml', $args);
+        $existingNode = $this->nodeService->getNode('5b197b67d5f8c');
+
+        $node = new Node();
+        $node->addMetadata(new PersonMetadata('Marry', 'P'))
+            ->addMetadata(new AddressMetadata('Main', 10, 'PS002'))
+            ->addLeaf($existingNode);
+
+        $this->nodeService->addOrUpdate($node);
     }
 
 

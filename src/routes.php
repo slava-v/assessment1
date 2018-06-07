@@ -9,10 +9,6 @@ $app->get('/node/{nodeId}', function (Request $request, Response $response, arra
     return $this->NodeController->getNode($request, $response, $args);
 });
 
-$app->get('/node/{nodeId}/{metaName:person|address}-meta', function (Request $request, Response $response, array $args) {
-    return $this->NodeController->getNodeWithMetadata($request, $response, $args);
-});
-
-$app->post('/node', function (Request $request, Response $response, array $args) {
+$app->get('/node', function (Request $request, Response $response, array $args) {
     return $this->NodeController->postNode($request, $response, $args);
 });
