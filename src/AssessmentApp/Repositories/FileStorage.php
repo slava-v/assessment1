@@ -39,18 +39,27 @@ class FileStorage implements IStorage
      */
     public function save(Node $node)
     {
-        file_put_contents($this->getFilename($node->getId()), json_encode($node));
+        return file_put_contents($this->getFilename($node->getId()), json_encode($node)) !== false;
     }
 
     /**
      * @inheritdoc
      */
-    public function delete(Node $node)
+    public function delete($nodeId)
     {
-        $fileName = $this->getFilename($node->getId());
-        if (file_exists($fileName)){
-            unlink($fileName);
+        if ($this->exists($nodeId)){
+            return unlink($this->getFilename($nodeId));
         }
+
+        return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function exists($nodeId)
+    {
+        return file_exists($this->getFilename($nodeId));
     }
 
     private function getFilename($nodeId)

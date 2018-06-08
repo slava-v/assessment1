@@ -16,8 +16,8 @@ interface IStorage
     /**
      * Loads data based on nodeId
      *
-     * @param $nodeId
-     * @return mixed
+     * @param string $nodeId
+     * @return string
      */
     function load($nodeId);
 
@@ -32,9 +32,17 @@ interface IStorage
     /**
      * Deletes
      *
-     * @param Node $node
-     * @return mixed
+     * @param string $nodeId
+     * @return bool
      */
-    function delete(Node $node);
+    function delete($nodeId);
+
+    /**
+     * Verifies if the node exists
+     *
+     * @param $nodeId
+     * @return boolean
+     */
+    function exists($nodeId);
 
 }

@@ -19,4 +19,11 @@ class ApiError
 
     /** @var string */
     public $helpUrl;
+
+    public function __construct($code, $message, $helpUrl)
+    {
+        $this->code = $code;
+        $this->message = $message;
+        $this->helpUrl = $helpUrl;
+    }
 }

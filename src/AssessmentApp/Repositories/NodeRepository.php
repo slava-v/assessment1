@@ -10,6 +10,7 @@ namespace AssessmentApp\Repositories;
 
 
 use AssessmentApp\Entities\Node;
+use AssessmentApp\Exceptions\NodeAlreadyExists;
 use AssessmentApp\Repositories\Interfaces\INodeRepository;
 use AssessmentApp\Repositories\Interfaces\IStorage;
 
@@ -20,6 +21,10 @@ class NodeRepository implements INodeRepository
      */
     private $storage;
 
+    /**
+     * NodeRepository constructor.
+     * @param IStorage $storage
+     */
     public function __construct(IStorage $storage)
     {
         $this->storage = $storage;
@@ -30,8 +35,11 @@ class NodeRepository implements INodeRepository
      */
     public function add(Node $node)
     {
-        $this->storage->save($node);
-        return true;
+        if ($this->storage->exists($node->getId())){
+            throw new NodeAlreadyExists();
+        }
+
+        return $this->storage->save($node);
     }
 
     /**
@@ -39,8 +47,7 @@ class NodeRepository implements INodeRepository
      */
     public function update(Node $node)
     {
-        // @todo: Method "stub" add method body
-        return true;
+        return $this->storage->save($node);
     }
 
     /**
@@ -48,7 +55,6 @@ class NodeRepository implements INodeRepository
      */
     public function getById($nodeId)
     {
-        // @todo: Method "stub" add method body
         return $this->storage->load($nodeId);
     }
 
@@ -57,9 +63,6 @@ class NodeRepository implements INodeRepository
      */
     public function delete($nodeId)
     {
-        // @todo: Method "stub" add method body
-        return true;
+        return $this->storage->delete($nodeId);
     }
-
-
 }

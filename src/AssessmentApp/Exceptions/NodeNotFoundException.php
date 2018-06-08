@@ -9,7 +9,14 @@
 namespace AssessmentApp\Exceptions;
 
 
+use Throwable;
+
 class NodeNotFoundException extends \Exception
 {
+    public function __construct($nodeId, $message = "", $code = 0, Throwable $previous = null)
+    {
+        $altMessage = 'Specified Node "' . $nodeId . '" not found';
 
+        parent::__construct($message ?: $altMessage, $code, $previous);
+    }
 }

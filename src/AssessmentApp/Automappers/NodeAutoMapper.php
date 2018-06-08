@@ -11,7 +11,6 @@ namespace AssessmentApp\Automappers;
 
 use AssessmentApp\Entities\AddressMetadata;
 use AssessmentApp\Entities\Node;
-use AssessmentApp\Entities\NodeDto;
 use AssessmentApp\Entities\NodeMetadataCollection;
 use AssessmentApp\Entities\NodeMetadataTypes;
 use AssessmentApp\Entities\PersonMetadata;
@@ -25,12 +24,24 @@ class NodeAutoMapper extends AutoMapperConfig
     {
         parent::__construct();
 
-        $this->registerMapping(\stdClass::class, PersonMetadata::class);
-        $this->registerMapping(\stdClass::class, AddressMetadata::class);
+        $this->registerMapping(\stdClass::class, PersonMetadata::class)
+            ->forMember('type', function ($item) {
+                return NodeMetadataTypes::PERSON;
+            });
+        $this->registerMapping(\stdClass::class, AddressMetadata::class)
+            ->forMember('type', function ($item) {
+                return NodeMetadataTypes::ADDRESS;
+            });
         $this->registerMapping(\stdClass::class, Node::class)
-            ->forMember('metaData', Operation::mapFromWithMapper(function($item, AutoMapperInterface $mapper) {
+            ->forMember('metaData', Operation::mapFromWithMapper(function ($item, AutoMapperInterface $mapper) {
+
                 $result = new NodeMetadataCollection();
-                foreach ($item->metaData as $metaData){
+
+                if (empty($item->metaData)) {
+                    return $result;
+                }
+
+                foreach ($item->metaData as $metaData) {
                     if ($metaData->type === NodeMetadataTypes::PERSON) {
                         $result->append($mapper->map($metaData, PersonMetadata::class));
                     } elseif ($metaData->type === NodeMetadataTypes::ADDRESS) {
@@ -38,7 +49,8 @@ class NodeAutoMapper extends AutoMapperConfig
                     }
                 }
                 return $result;
-            }));
+            }))
+            ->forMember('leafs', Operation::mapTo(Node::class));
     }
 
 }

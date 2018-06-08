@@ -8,18 +8,17 @@
 
 namespace AssessmentApp\Controllers;
 
-use AssessmentApp\Entities\AddressMetadata;
+use AssessmentApp\Entities\ApiError;
 use AssessmentApp\Entities\ApiResponse;
 use AssessmentApp\Entities\Node;
-use AssessmentApp\Entities\NodeMetadataTypes;
-use AssessmentApp\Entities\PersonMetadata;
 use AssessmentApp\Services\Interfaces\INodeService;
 use Interop\Container\ContainerInterface;
 use Slim\Exception\NotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class NodeController {
+class NodeController
+{
 
     private $container;
     /**
@@ -34,28 +33,106 @@ class NodeController {
     }
 
 
-    public function getNode(Request $request, Response $response, array $args){
+    public function getNode(Request $request, Response $response, array $args)
+    {
         $nodeId = $args['nodeId'];
 
-        $node = $this->nodeService->getNode($nodeId);
+        try {
+            $node = $this->nodeService->getNode($nodeId);
 
-        if ($node instanceof Node){
-            return $newResponse = $response->withJson(new ApiResponse($node));
-        } else {
-            return new NotFoundException($request, $response);
+            if ($node instanceof Node) {
+                return $response->withJson(new ApiResponse($node));
+            } else {
+                throw new NotFoundException($request, $response);
+            }
+
+        } catch (\Exception $e) {
+
+            return $response->withJson(
+                new ApiResponse(null,
+                    new ApiError($e->getCode(), $e->getMessage(), '')
+                ),
+                404
+            );
         }
     }
 
-    public function postNode($request, $response, $args)
+    public function addNode($request, $response, $args)
     {
-        $existingNode = $this->nodeService->getNode('5b197b67d5f8c');
+        try {
+            $newNode = $request->getParsedBody();
 
-        $node = new Node();
-        $node->addMetadata(new PersonMetadata('Marry', 'P'))
-            ->addMetadata(new AddressMetadata('Main', 10, 'PS002'))
-            ->addLeaf($existingNode);
+            $result = $this->nodeService->addNode_FromJsonData($newNode);
 
-        $this->nodeService->addOrUpdate($node);
+            if ($result) {
+                return $response->withJson(new ApiResponse(['newId' =>$result->getId()]));
+            } else {
+                return $response->withJson(
+                    new ApiResponse(null, new ApiError(0, 'There was an error while adding the Node', '')),
+                    500
+                );
+            }
+
+        } catch (\Exception $e){
+            return $response->withJson(
+                new ApiResponse(null,
+                    new ApiError($e->getCode(), $e->getMessage(), '')
+                ),
+                404
+            );
+        }
+    }
+
+    public function modifyNode($request, $response, $args)
+    {
+        try {
+            $nodeChanges = $request->getParsedBody();
+
+            $result = $this->nodeService->updateNode_FromJsonData($nodeChanges);
+
+            if ($result) {
+                return $response->withJson(new ApiResponse('ok'));
+            } else {
+                return $response->withJson(
+                    new ApiResponse(null, new ApiError(0, 'There was an error while modifying the Node', '')),
+                    500
+                );
+            }
+
+        } catch (\Exception $e){
+            return $response->withJson(
+                new ApiResponse(null,
+                    new ApiError($e->getCode(), $e->getMessage(), '')
+                ),
+                404
+            );
+        }
+    }
+
+    public function deleteNode($request, $response, $args)
+    {
+        try {
+            $nodeId = $args['nodeId'];
+
+            $result = $this->nodeService->deleteNode($nodeId);
+
+            if ($result) {
+                return $response->withJson(new ApiResponse('ok'));
+            } else {
+                return $response->withJson(
+                    new ApiResponse(null, new ApiError(0, 'There was an error while deleting the Node', '')),
+                    500
+                );
+            }
+
+        } catch (\Exception $e){
+            return $response->withJson(
+                new ApiResponse(null,
+                    new ApiError($e->getCode(), $e->getMessage(), '')
+                ),
+                404
+            );
+        }
     }
 
 

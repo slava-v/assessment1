@@ -21,7 +21,12 @@ final class Node implements \JsonSerializable
 
     public function __construct($id = null, NodeMetadataCollection $metaData = null, $leafs = [])
     {
-        $this->id = $id ?: uniqid();
+        if (empty($id)){
+            $this->genId();
+        } else {
+            $this->id = $id;
+        }
+
         $this->metaData = new NodeMetadataCollection();
         $this->leafs = $leafs;
     }
@@ -94,6 +99,14 @@ final class Node implements \JsonSerializable
         return isset($this->leafs[$id]);
     }
 
+
+    public function genId()
+    {
+        if (empty($this->id)){
+            $this->id = uniqid();
+        }
+        return $this->id;
+    }
 
     /**
      * @inheritdoc

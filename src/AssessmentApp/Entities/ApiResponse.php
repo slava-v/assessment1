@@ -15,7 +15,7 @@ class ApiResponse
     public $data;
 
     /** @var boolean true Success, false Error */
-    public $status;
+    public $success;
 
     /** @var ApiError */
     public $error;
@@ -23,7 +23,7 @@ class ApiResponse
     public function __construct($data, ApiError $error = null)
     {
         $this->data = $data;
-        $this->status = $error !== null;
+        $this->success = $error === null;
         $this->error = $error;
     }
 }
